@@ -1,0 +1,24 @@
+.slider{
+	width: 900px;
+	height: 250px;
+	overflow: hidden;
+	margin: 30px auto;
+	background-image: url('image/load2.gif');
+	background-repeat: no-repeat;
+	background-position: center; 
+}
+
+.shadow{
+	background-image: url('image/slider-shadow.png');
+	background-repeat: no-repeat;
+	background-position: top;
+	width: 900px;
+	height: 59px;
+	margin: -60px auto;
+}
+
+.slider img {
+	width: 900px;
+	height:300px;
+	display: none;
+}

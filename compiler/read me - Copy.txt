@@ -1,0 +1,5 @@
+1. edit 'index.html'
+2. css for 'index.html' is 'css/style.css'
+3. in 'index.css' there is a div named "Mohon's code", link up your code with this
+4. do not touch css/style2.css
+5. do not touch firstfollow folder and it's code. this is very sensitive.

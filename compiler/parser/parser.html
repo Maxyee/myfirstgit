@@ -1,0 +1,255 @@
+<html>
+<head>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="viewport" content="width=device-width maximum-scale=1 initial-scale=1 user-scalable=no">
+<title>cse411-parser</title>
+<link rel="stylesheet" type="text/css" href="../css/style2.css">
+
+<style>
+body {
+    background-color: #ddd;
+    font-family: 'Helvetica Neue', HelveticaNeue, sans-serif;
+    text-shadow: white 0px 1px 1px;
+}
+p{
+    font-size:14px;
+    color: white;
+}
+pre {
+    text-shadow: none;
+    font-size: 14px;
+}
+
+input {
+    width: 50%;
+    font-family: monospace;
+    font-size: 1.3em;
+    border: 1px solid #bbb;
+    border-radius: 0.5em;
+    padding: 0.2em 0.3em 0.2em 0.4em;
+    background-color: white;
+    margin-left: 208px;
+}
+
+table {
+    text-shadow: none;
+    background-color: #e6e6e6;
+    width: 50%;
+    margin-left: 20px;
+    border-collapse: collapse;
+    margin-left: 208px;
+}
+
+table td, table th {
+    padding: 0;
+}
+
+table td {
+    border: 1px solid #ccc;
+    padding: 3px;
+}
+
+.footer {
+    text-shadow: none;
+    font-size: 0.8em;
+    color: #888;
+    margin-top: 2em;
+}
+
+#syndiv{
+    height: auto;
+    width: 50%;
+    border: 2px solid black;
+    background-color: white;
+    margin-left: 208px;
+}
+
+.emscripten { padding-right: 0; margin-left: auto; margin-right: auto; display: block; }
+      div.emscripten { text-align: center; }      
+      
+      /* the canvas *must not* have any border or padding, or mouse coords will be wrong */
+      canvas.emscripten { border: 0px none; }
+
+      #emscripten_logo {
+        display: inline-block;
+        margin: 0;
+      }
+
+      .spinner {
+        height: 30px;
+        width: 30px;
+        margin: 0;
+        margin-top: 20px;
+        margin-left: 20px;
+        display: inline-block;
+        vertical-align: top;
+
+        -webkit-animation: rotation .8s linear infinite;
+        -moz-animation: rotation .8s linear infinite;
+        -o-animation: rotation .8s linear infinite;
+        animation: rotation 0.8s linear infinite;
+
+        border-left: 5px solid rgb(235, 235, 235);
+        border-right: 5px solid rgb(235, 235, 235);
+        border-bottom: 5px solid rgb(235, 235, 235);
+        border-top: 5px solid rgb(120, 120, 120);   
+        border-radius: 100%;
+        background-color: rgb(189, 215, 46);
+      }
+
+      @-webkit-keyframes rotation {
+        from {-webkit-transform: rotate(0deg);}
+        to {-webkit-transform: rotate(360deg);}
+      }
+      @-moz-keyframes rotation {
+        from {-moz-transform: rotate(0deg);}
+        to {-moz-transform: rotate(360deg);}
+      }
+      @-o-keyframes rotation {
+        from {-o-transform: rotate(0deg);}
+        to {-o-transform: rotate(360deg);}
+      }
+      @keyframes rotation {
+        from {transform: rotate(0deg);}
+        to {transform: rotate(360deg);}
+      }
+
+      #status {
+        display: inline-block;
+        vertical-align: top;
+        margin-top: 30px;
+        margin-left: 20px;
+        font-weight: bold;
+        color: rgb(120, 120, 120);
+      }
+
+      #progress {
+        height: 20px;
+        width: 30px;
+      }
+
+      #controls {
+        display: inline-block;
+        float: right;
+        vertical-align: top;
+        margin-top: 30px;
+        margin-right: 20px;
+      }
+
+      #output {
+        width: 65%;
+        margin: 0 auto;
+        margin-top: 10px;
+        margin-bottom: 176px;
+        border-left: 0px;
+        border-right: 0px;
+        padding-left: 0px;
+        padding-right: 0px;
+        display: block;
+        background-color: #434445;
+        color: white;
+        font-family: 'Lucida Console', Monaco, monospace;
+        outline: none;
+      }
+
+
+</style>
+</head>
+<body>
+
+     <div id="main">
+    <div id="header">
+    <div id="banner">
+      <div id="welcome">
+        <h1>[cse 411 project]</h1>
+      </div><!--close welcome-->
+      <div id="menubar">
+          <ul id="menu">
+            <li class="current"><a href="../index.html">[home]</a></li>
+            
+          </ul>
+        </div><!--close menubar-->    
+    </div><!--close banner--> 
+    </div><!--close header-->
+
+
+    <div id="site_content">  
+    
+        <div style="border:2px inset black;margin:2px; padding:2px;"><h2 style="text-align:center; color:Yellow; font-family:Lucida Console, Monaco, monospace;">{ parse tree generator }</h2></div>
+
+        <div class="spinner" id='spinner'></div>
+        <div class="emscripten" id="status">
+            <!-- <img src="images/Untitled.gif"> -->
+        </div>
+
+          
+        <div class="emscripten">
+          <progress value="0" max="100" id="progress" hidden=1></progress>
+        </div>
+
+        
+        <div class="emscripten_border">
+          <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+        </div>
+            <p>Input An Expression (example: y = 7 + 9 * 4 + 2)</p>
+            <p><input type="text" id="code" autocapitalize="off" spellcheck="false"
+                value="x = 6 + 7" onChange='parse()' onKeyDown='parse()'></input>
+
+            <p>Syntax tree:</p>
+            <div id="syndiv">
+            <pre id="syntax"></pre>
+            </div>
+            <p>Tokens:</p>
+            <div id="tokens"></div>
+
+            <p class="footer"></p>
+
+
+    </div>
+
+
+
+
+
+
+
+<!-- <p>Type a math expression:</p>
+<p><input type="text" id="code" autocapitalize="off" spellcheck="false"
+    value="x = 6 + 7" onChange='parse()' onKeyDown='parse()'></input>
+
+<p>Syntax tree:</p>
+<pre id="syntax"></pre>
+<p>Tokens:</p>
+<div id="tokens"></div>
+
+<p class="footer">Supported tested browsers: IE&nbsp;7+, Firefox&nbsp;4+,
+Safari&nbsp;5+, Chrome&nbsp;9+, Opera&nbsp;11+, Konqueror&nbsp;4.6+.</p> -->
+
+
+<div id="content_grey">
+    <div class="content_grey_container_box">
+   
+    </div><!--close content_grey_container_box-->
+      <div class="content_grey_container_box">
+      
+    </div><!--close content_grey_container_box-->
+      <div class="content_grey_container_boxl">
+    <h4>[created by]</h4>
+      <p>turzo ahsan sami - 133014007</br>
+      <p></p>
+      <p></p>
+    </div><!--close content_grey_container_box1-->      
+    <br style="clear:both"/>
+    </div><!--close content_grey--> 
+
+
+
+<script src="TapDigit.js" type="text/javascript" charset="utf-8"></script>
+<script src="ParserTest.js" type="text/javascript" charset="utf-8"></script>
+<script>parse();</script>
+
+</body>
+
+
+</html>
